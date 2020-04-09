@@ -1,6 +1,6 @@
 name: Packer Validate
 
-on: [pull]
+on: [push]
 
 jobs:
   test_action:
