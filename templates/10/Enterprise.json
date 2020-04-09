@@ -1,0 +1,195 @@
+{
+  "builders": [
+    {
+      "boot_wait": "6m",
+      "communicator": "winrm",
+      "cpus": "2",
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "{{user `autounattend`}}",
+        "{{user `unattend`}}",
+        "./scripts/Enable-WinRM.ps1",
+        "./scripts/Sysprep.bat",
+        "./scripts/Windows-Updates.ps1"
+      ],
+      "headless": true,
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "memory": "2048",
+      "shutdown_command": "a:/Sysprep.bat",
+      "type": "qemu",
+      "accelerator": "kvm",
+      "output_directory": "Windows-10-Enterprise-qemu",
+      "qemuargs": [
+        [
+          "-drive",
+          "file=Windows-10-Enterprise/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"
+        ],
+        [
+          "-drive",
+          "file={{ user `virtio_win_iso` }},media=cdrom,index=3"
+        ]
+      ],
+      "vm_name": "{{user `vm_name`}}",
+      "winrm_password": "vagrant",
+      "winrm_timeout": "{{user `winrm_timeout`}}",
+      "winrm_username": "vagrant"
+    },
+    {
+      "boot_wait": "6m",
+      "communicator": "winrm",
+      "configuration_version": "8.0",
+      "cpus": "2",
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "{{user `autounattend`}}",
+        "{{user `unattend`}}",
+        "./scripts/Enable-WinRM.ps1",
+        "./scripts/Sysprep.bat",
+        "./scripts/Windows-Updates.ps1"
+      ],
+      "guest_additions_mode": "none",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "memory": "2048",
+      "shutdown_command": "a:/Sysprep.bat",
+      "switch_name": "{{user `switch_name`}}",
+      "type": "hyperv-iso",
+      "vm_name": "{{user `vm_name`}}",
+      "winrm_password": "vagrant",
+      "winrm_timeout": "{{user `winrm_timeout`}}",
+      "winrm_username": "vagrant"
+    },
+    {
+      "boot_command": "",
+      "boot_wait": "6m",
+      "communicator": "winrm",
+      "cpus": 4,
+      "disk_adapter_type": "lsisas1068",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_type_id": "{{user `disk_type_id`}}",
+      "floppy_files": [
+        "{{user `autounattend`}}",
+        "{{user `unattend`}}",
+        "./scripts/Enable-WinRM.ps1",
+        "./scripts/Sysprep.bat",
+        "./scripts/Windows-Updates.ps1"
+      ],
+      "guest_os_type": "windows9-64",
+      "headless": "{{user `headless`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "memory": 8192,
+      "shutdown_command": "a:/Sysprep.bat",
+      "type": "vmware-iso",
+      "version": 14,
+      "vm_name": "{{user `vm_name`}}",
+      "vmx_data": {
+        "RemoteDisplay.vnc.enabled": "false",
+        "RemoteDisplay.vnc.port": "5900"
+      },
+      "vmx_remove_ethernet_interfaces": true,
+      "vnc_port_max": 5980,
+      "vnc_port_min": 5900,
+      "winrm_password": "vagrant",
+      "winrm_timeout": "{{user `winrm_timeout`}}",
+      "winrm_username": "vagrant"
+    },
+    {
+      "boot_command": "",
+      "boot_wait": "6m",
+      "communicator": "winrm",
+      "cpus": 2,
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "{{user `autounattend`}}",
+        "{{user `unattend`}}",
+        "./scripts/Enable-WinRM.ps1",
+        "./scripts/Windows-Updates.ps1",
+        "./scripts/Sysprep.bat",
+        "./scripts/Optimize-DiskUsage.ps1"
+      ],
+      "guest_additions_mode": "disable",
+      "guest_os_type": "Windows10_64",
+      "vrdp_bind_address": "0.0.0.0",
+      "headless": "{{user `headless`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_url": "{{user `iso_url`}}",
+      "memory": 2048,
+      "shutdown_command": "a:/Sysprep.bat",
+      "type": "virtualbox-iso",
+      "vm_name": "{{user `vm_name`}}",
+      "winrm_password": "vagrant",
+      "winrm_timeout": "{{user `winrm_timeout`}}",
+      "winrm_username": "vagrant"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "keep_input_artifact": false,
+        "output": "{{user `vm_name`}}-{{.Provider}}.box",
+        "type": "vagrant",
+        "vagrantfile_template": "./vagrant.templates/10/Enterprise.template"
+      },
+      {
+        "type": "vagrant-cloud",
+        "box_tag": "maschin/{{user `vm_name` | lower}}",
+        "version": "{{user `version`}}",
+        "access_token": "{{user `cloud_token`}}",
+        "version_description": "[Changelog](https://github.com/maschin/template/releases/tag/{{user `version`}}"
+      }
+    ]
+  ],
+  "provisioners": [
+    {
+      "type": "shell-local",
+      "command": "ansible-galaxy collection install -r ./ansible/requirements.yml -p ./ansible/collections"
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "ansible/playbooks/playbook.yml",
+      "galaxy_file": "ansible/requirements.yml",
+      "roles_path": "ansible/roles",
+      "host_alias": "{{user `vm_name`}}",
+      "ansible_env_vars": [
+        "ANSIBLE_CONFIG=ansible/ansible.cfg"
+      ],
+      "extra_arguments": [
+        "--connection",
+        "packer",
+        "--extra-vars",
+        "ansible_shell_type=powershell ansible_shell_executable=None"
+      ]
+    },
+    {
+      "restart_timeout": "{{user `restart_timeout`}}",
+      "type": "windows-restart"
+    },
+    {
+      "type": "powershell",
+      "script": "./scripts/Optimize-DiskUsage.ps1"
+    }
+  ],
+  "variables": {
+    "vm_name": "Windows-10-Enterprise",
+    "autounattend": "./files/10/Enterprise/Autounattend.xml",
+    "unattend": "./files/10/Enterprise/Unattend.xml",
+    "disk_size": "61440",
+    "disk_type_id": "1",
+    "headless": "true",
+    "iso_checksum": "9ef81b6a101afd57b2dbfa44d5c8f7bc94ff45b51b82c5a1f9267ce2e63e9f53",
+    "iso_checksum_type": "sha256",
+    "iso_url": "https://software-download.microsoft.com/download/pr/18363.418.191007-0143.19h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
+    "restart_timeout": "5m",
+    "vhv_enable": "false",
+    "winrm_timeout": "6h",
+    "virtio_win_iso": "~/virtio-win.iso",
+    "version": "{{env `VERSION`}}",
+    "cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}"
+  }
+}

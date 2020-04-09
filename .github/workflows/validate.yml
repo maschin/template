@@ -1,0 +1,22 @@
+name: Packer Validate
+
+on: [pull]
+
+jobs:
+  test_action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Checkout collection
+        uses: actions/checkout@v2
+        with:
+          repository: maschin/collection.git
+          path: ansible
+
+      - name: Validate Template
+        uses: operatehappy/packer-github-actions@master
+        with:
+          command: validate
+          target: templates/10/Enterprise.json templates/10/Pro.json
