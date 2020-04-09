@@ -3,7 +3,7 @@ name: Packer Validate
 on: [push]
 
 jobs:
-  test_action:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,4 +19,5 @@ jobs:
         uses: operatehappy/packer-github-actions@master
         with:
           command: validate
+          arguments: -syntax-only
           target: templates/10/Enterprise.json templates/10/Pro.json
