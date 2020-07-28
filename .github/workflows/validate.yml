@@ -14,6 +14,7 @@ jobs:
         with:
           repository: maschin/collection.git
           path: ansible
+          ref: master
 
       - name: Validate Template
         uses: operatehappy/packer-github-actions@master
