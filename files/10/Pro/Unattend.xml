@@ -33,7 +33,7 @@
             <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /C wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
-                    <Description>Set Execution Policy 64 Bit</Description>
+                    <Description>Disable password expiration</Description>
                     <Order>1</Order>
                 </SynchronousCommand>
             </FirstLogonCommands>
