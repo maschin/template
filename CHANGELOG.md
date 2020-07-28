@@ -11,6 +11,7 @@ and [human-readable changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Type error in description of the machine fixed
 - Disabling password expiration for the vagrant user
+- Fixed checkout problem with default branch name
 
 ## 202004
 
