@@ -141,7 +141,7 @@
         "box_tag": "maschin/{{user `vm_name` | lower}}",
         "version": "{{user `version`}}",
         "access_token": "{{user `cloud_token`}}",
-        "version_description": "[Changelog](https://github.com/maschin/template/releases/tag/{{user `version`}}"
+        "version_description": "[Changelog](https://github.com/maschin/template/releases/tag/{{user `version`}})"
       }
     ]
   ],

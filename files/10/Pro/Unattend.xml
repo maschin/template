@@ -30,6 +30,13 @@
                 <LogonCount>1</LogonCount>
                 <Username>vagrant</Username>
             </AutoLogon>
+            <FirstLogonCommands>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /C wmic useraccount where "name='vagrant'" set PasswordExpires=FALSE</CommandLine>
+                    <Description>Set Execution Policy 64 Bit</Description>
+                    <Order>1</Order>
+                </SynchronousCommand>
+            </FirstLogonCommands>
         </component>
     </settings>
     <settings pass="specialize">
