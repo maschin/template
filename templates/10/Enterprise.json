@@ -1,6 +1,7 @@
 {
   "builders": [
     {
+      "accelerator": "kvm",
       "boot_wait": "6m",
       "communicator": "winrm",
       "cpus": "2",
@@ -13,13 +14,9 @@
         "./scripts/Windows-Updates.ps1"
       ],
       "headless": true,
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
       "iso_url": "{{user `iso_url`}}",
       "memory": "2048",
-      "shutdown_command": "a:/Sysprep.bat",
-      "type": "qemu",
-      "accelerator": "kvm",
       "output_directory": "Windows-10-Enterprise-qemu",
       "qemuargs": [
         [
@@ -31,6 +28,8 @@
           "file={{ user `virtio_win_iso` }},media=cdrom,index=3"
         ]
       ],
+      "shutdown_command": "a:/Sysprep.bat",
+      "type": "qemu",
       "vm_name": "{{user `vm_name`}}",
       "winrm_password": "vagrant",
       "winrm_timeout": "{{user `winrm_timeout`}}",
@@ -50,8 +49,7 @@
         "./scripts/Windows-Updates.ps1"
       ],
       "guest_additions_mode": "none",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
       "iso_url": "{{user `iso_url`}}",
       "memory": "2048",
       "shutdown_command": "a:/Sysprep.bat",
@@ -79,8 +77,7 @@
       ],
       "guest_os_type": "windows9-64",
       "headless": "{{user `headless`}}",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
       "iso_url": "{{user `iso_url`}}",
       "memory": 8192,
       "shutdown_command": "a:/Sysprep.bat",
@@ -114,15 +111,14 @@
       ],
       "guest_additions_mode": "disable",
       "guest_os_type": "Windows10_64",
-      "vrdp_bind_address": "0.0.0.0",
       "headless": "{{user `headless`}}",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
       "iso_url": "{{user `iso_url`}}",
       "memory": 2048,
       "shutdown_command": "a:/Sysprep.bat",
       "type": "virtualbox-iso",
       "vm_name": "{{user `vm_name`}}",
+      "vrdp_bind_address": "0.0.0.0",
       "winrm_password": "vagrant",
       "winrm_timeout": "{{user `winrm_timeout`}}",
       "winrm_username": "vagrant"
@@ -137,25 +133,20 @@
         "vagrantfile_template": "./vagrant.templates/10/Enterprise.template"
       },
       {
-        "type": "vagrant-cloud",
-        "box_tag": "maschin/{{user `vm_name` | lower}}",
-        "version": "{{user `version`}}",
         "access_token": "{{user `cloud_token`}}",
+        "box_tag": "maschin/{{user `vm_name` | lower}}",
+        "type": "vagrant-cloud",
+        "version": "{{user `version`}}",
         "version_description": "[Changelog](https://github.com/maschin/template/releases/tag/{{user `version`}})"
       }
     ]
   ],
   "provisioners": [
     {
-      "type": "shell-local",
-      "command": "ansible-galaxy collection install -r ./ansible/requirements.yml -p ./ansible/collections"
+      "command": "ansible-galaxy collection install -r ./ansible/requirements.yml -p ./ansible/collections",
+      "type": "shell-local"
     },
     {
-      "type": "ansible",
-      "playbook_file": "ansible/playbooks/playbook.yml",
-      "galaxy_file": "ansible/requirements.yml",
-      "roles_path": "ansible/roles",
-      "host_alias": "{{user `vm_name`}}",
       "ansible_env_vars": [
         "ANSIBLE_CONFIG=ansible/ansible.cfg"
       ],
@@ -164,21 +155,25 @@
         "packer",
         "--extra-vars",
         "ansible_shell_type=powershell ansible_shell_executable=None"
-      ]
+      ],
+      "galaxy_file": "ansible/requirements.yml",
+      "host_alias": "{{user `vm_name`}}",
+      "playbook_file": "ansible/playbooks/playbook.yml",
+      "roles_path": "ansible/roles",
+      "type": "ansible"
     },
     {
       "restart_timeout": "{{user `restart_timeout`}}",
       "type": "windows-restart"
     },
     {
-      "type": "powershell",
-      "script": "./scripts/Optimize-DiskUsage.ps1"
+      "script": "./scripts/Optimize-DiskUsage.ps1",
+      "type": "powershell"
     }
   ],
   "variables": {
-    "vm_name": "Windows-10-Enterprise",
     "autounattend": "./files/10/Enterprise/Autounattend.xml",
-    "unattend": "./files/10/Enterprise/Unattend.xml",
+    "cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}",
     "disk_size": "61440",
     "disk_type_id": "1",
     "headless": "true",
@@ -186,10 +181,11 @@
     "iso_checksum_type": "sha256",
     "iso_url": "https://software-download.microsoft.com/download/pr/18363.418.191007-0143.19h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
     "restart_timeout": "5m",
-    "vhv_enable": "false",
-    "winrm_timeout": "6h",
-    "virtio_win_iso": "~/virtio-win.iso",
+    "unattend": "./files/10/Enterprise/Unattend.xml",
     "version": "{{env `VERSION`}}",
-    "cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}"
+    "vhv_enable": "false",
+    "virtio_win_iso": "~/virtio-win.iso",
+    "vm_name": "Windows-10-Enterprise",
+    "winrm_timeout": "6h"
   }
 }

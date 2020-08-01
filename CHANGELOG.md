@@ -7,6 +7,10 @@ and [human-readable changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 202008
 
+### Chanhed
+
+- Templates made compatible with the current packer version
+
 ### Fixed
 
 - Type error in description of the machine fixed
