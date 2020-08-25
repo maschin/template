@@ -11,7 +11,8 @@
         "{{user `unattend`}}",
         "./scripts/Enable-WinRM.ps1",
         "./scripts/Sysprep.bat",
-        "./scripts/Windows-Updates.ps1"
+        "./scripts/Windows-Updates.ps1",
+        "./scripts/OpenSSH.ps1"
       ],
       "headless": true,
       "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
@@ -46,7 +47,8 @@
         "{{user `unattend`}}",
         "./scripts/Enable-WinRM.ps1",
         "./scripts/Sysprep.bat",
-        "./scripts/Windows-Updates.ps1"
+        "./scripts/Windows-Updates.ps1",
+        "./scripts/OpenSSH.ps1"
       ],
       "guest_additions_mode": "none",
       "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
@@ -73,7 +75,8 @@
         "{{user `unattend`}}",
         "./scripts/Enable-WinRM.ps1",
         "./scripts/Sysprep.bat",
-        "./scripts/Windows-Updates.ps1"
+        "./scripts/Windows-Updates.ps1",
+        "./scripts/OpenSSH.ps1"
       ],
       "guest_os_type": "windows9-64",
       "headless": "{{user `headless`}}",
@@ -107,7 +110,8 @@
         "./scripts/Enable-WinRM.ps1",
         "./scripts/Windows-Updates.ps1",
         "./scripts/Sysprep.bat",
-        "./scripts/Optimize-DiskUsage.ps1"
+        "./scripts/Optimize-DiskUsage.ps1",
+        "./scripts/OpenSSH.ps1"
       ],
       "guest_additions_mode": "disable",
       "guest_os_type": "Windows10_64",
@@ -131,14 +135,8 @@
         "output": "{{user `vm_name`}}-{{.Provider}}.box",
         "type": "vagrant",
         "vagrantfile_template": "./vagrant.templates/10/Pro.template"
-      },
-      {
-        "access_token": "{{user `cloud_token`}}",
-        "box_tag": "maschin/{{user `vm_name` | lower}}",
-        "type": "vagrant-cloud",
-        "version": "{{user `version`}}",
-        "version_description": "[Changelog](https://github.com/maschin/template/releases/tag/{{user `version`}})"
       }
+      
     ]
   ],
   "provisioners": [
@@ -173,7 +171,6 @@
   ],
   "variables": {
     "autounattend": "./files/10/Pro/Autounattend.xml",
-    "cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}",
     "disk_size": "61440",
     "disk_type_id": "1",
     "headless": "true",
