@@ -11,7 +11,8 @@
         "{{user `unattend`}}",
         "./scripts/Enable-WinRM.ps1",
         "./scripts/Sysprep.bat",
-        "./scripts/Windows-Updates.ps1"
+        "./scripts/Windows-Updates.ps1",
+        "./scripts/Install-OpenSSH.ps1"
       ],
       "headless": true,
       "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
@@ -46,7 +47,8 @@
         "{{user `unattend`}}",
         "./scripts/Enable-WinRM.ps1",
         "./scripts/Sysprep.bat",
-        "./scripts/Windows-Updates.ps1"
+        "./scripts/Windows-Updates.ps1",
+        "./scripts/Install-OpenSSH.ps1"
       ],
       "guest_additions_mode": "none",
       "iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
@@ -73,7 +75,8 @@
         "{{user `unattend`}}",
         "./scripts/Enable-WinRM.ps1",
         "./scripts/Sysprep.bat",
-        "./scripts/Windows-Updates.ps1"
+        "./scripts/Windows-Updates.ps1",
+        "./scripts/Install-OpenSSH.ps1"
       ],
       "guest_os_type": "windows9-64",
       "headless": "{{user `headless`}}",
@@ -107,7 +110,8 @@
         "./scripts/Enable-WinRM.ps1",
         "./scripts/Windows-Updates.ps1",
         "./scripts/Sysprep.bat",
-        "./scripts/Optimize-DiskUsage.ps1"
+        "./scripts/Optimize-DiskUsage.ps1",
+        "./scripts/Install-OpenSSH.ps1"
       ],
       "guest_additions_mode": "disable",
       "guest_os_type": "Windows10_64",
@@ -137,7 +141,7 @@
         "box_tag": "maschin/{{user `vm_name` | lower}}",
         "type": "vagrant-cloud",
         "version": "{{user `version`}}",
-        "version_description": "[Changelog](https://github.com/maschin/template/releases/tag/{{user `version`}})"
+        "version_description": "[Changelog](https://github.com/maschin/builder/releases/tag/{{user `version`}})"
       }
     ]
   ],
@@ -168,7 +172,8 @@
     },
     {
       "script": "./scripts/Optimize-DiskUsage.ps1",
-      "type": "powershell"
+      "type": "powershell",
+      "skip_clean": "true"
     }
   ],
   "variables": {
